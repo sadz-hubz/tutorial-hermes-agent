@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tutorial Hermes Agent — Video Slides</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0f0c29; color: #e0e0e0; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
+  .slide {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    padding: 60px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    background: #0f0c29;
+    position: relative;
+    overflow: hidden;
+  }
+  .slide.active { display: flex; }
+
+  /* Cover */
+  .cover { justify-content: center; align-items: center; text-align: center; background: linear-gradient(180deg, #0f0c29 0%, #16213e 60%, #0f0c29 100%); }
+  .cover h1 { font-size: 56px; color: #e94560; margin-bottom: 20px; font-weight: 900; letter-spacing: -1px; }
+  .cover h2 { font-size: 24px; color: #888; font-weight: 300; margin-bottom: 40px; }
+  .cover .owl { font-size: 100px; animation: float 3s ease-in-out infinite; }
+  .cover .tags { display: flex; gap: 12px; justify-content: center; margin-top: 30px; flex-wrap: wrap; }
+  .cover .tag { background: #16213e; color: #fff; padding: 8px 20px; border-radius: 20px; font-size: 14px; font-weight: 600; border: 1px solid #e94560; }
+
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
+
+  /* Content slides */
+  h2.section { font-size: 32px; color: #e94560; margin-bottom: 30px; font-weight: 800; }
+  h2.section::after { content: ''; display: block; width: 60px; height: 4px; background: #e94560; margin-top: 10px; border-radius: 2px; }
+  h3 { font-size: 20px; color: #fff; margin: 20px 0 10px; }
+  p { font-size: 18px; line-height: 1.8; color: #aaa; margin-bottom: 8px; }
+  ul { list-style: none; margin: 10px 0; }
+  ul li { font-size: 18px; padding: 6px 0; color: #ccc; display: flex; align-items: flex-start; gap: 12px; }
+  ul li::before { content: '→'; color: #e94560; font-weight: bold; font-size: 20px; }
+
+  .step { display: flex; gap: 16px; align-items: flex-start; margin: 16px 0; background: #16213e; padding: 20px; border-radius: 12px; border-left: 4px solid #e94560; }
+  .step-num { background: #e94560; color: #fff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px; flex-shrink: 0; }
+  .step-content h4 { font-size: 18px; color: #fff; margin-bottom: 4px; }
+  .step-content p { font-size: 15px; color: #888; margin-bottom: 6px; }
+  .step-content code { background: #0f3460; color: #00ff88; padding: 8px 16px; border-radius: 6px; font-family: 'Fira Code', monospace; font-size: 13px; display: inline-block; }
+  .step-content .warn { color: #f57f17; font-size: 13px; margin-top: 6px; font-style: italic; }
+
+  .tip { background: #e8f5e9; color: #388e3c; padding: 12px 20px; border-radius: 8px; font-size: 15px; margin: 10px 0; }
+  .warn-box { background: #fff8e1; color: #f57f17; padding: 12px 20px; border-radius: 8px; font-size: 15px; margin: 10px 0; }
+
+  .model-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+  .model-card { background: #16213e; padding: 16px; border-radius: 10px; border: 1px solid #0f3460; }
+  .model-card .name { font-size: 16px; color: #fff; font-weight: 700; }
+  .model-card .desc { font-size: 13px; color: #888; margin-top: 4px; }
+  .model-card .badge { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 700; margin-top: 6px; }
+  .badge-rec { background: #00ff88; color: #000; }
+  .badge-fast { background: #e94560; color: #fff; }
+  .badge-best { background: #f57f17; color: #fff; }
+  .badge-big { background: #9c27b0; color: #fff; }
+
+  .error-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 8px 0; }
+  .error-card { background: #16213e; padding: 14px; border-radius: 8px; border-top: 3px solid #e94560; }
+  .error-card .err { font-size: 13px; color: #e94560; font-weight: 700; margin-bottom: 4px; }
+  .error-card .fix { font-size: 13px; color: #00ff88; }
+
+  /* Progress bar */
+  .progress { position: fixed; bottom: 0; left: 0; height: 4px; background: #e94560; transition: width 0.5s; z-index: 100; }
+
+  /* Controls */
+  .controls { position: fixed; bottom: 20px; right: 30px; display: flex; gap: 10px; z-index: 100; }
+  .controls button { background: #16213e; color: #fff; border: 1px solid #e94560; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: all .2s; }
+  .controls button:hover { background: #e94560; }
+  .slide-num { position: fixed; bottom: 20px; left: 30px; color: #666; font-size: 14px; z-index: 100; }
+
+  /* Code block */
+  .code-block { background: #1a1a2e; border-radius: 10px; padding: 20px; margin: 10px 0; width: 100%; overflow: auto; }
+  .code-block code { color: #00ff88; font-family: 'Fira Code', monospace; font-size: 14px; line-height: 1.8; white-space: pre; }
+  .code-block .comment { color: #666; }
+  .code-block .cmd { color: #00ff88; }
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div class="progress" id="progress"></div>
+<div class="slide-num" id="slideNum">1 / 13</div>
+<div class="controls">
+  <button onclick="prev()">◀ Prev</button>
+  <button onclick="next()">Next ▶</button>
+  <button onclick="toggleAuto()">⏯ Auto</button>
+</div>
+
+<style>
+  .slide { display: none; }
+  .slide.active { display: flex; }
+</style>
+
+<!-- ===== SLIDE 1: COVER ===== -->
+<div class="slide cover active" data-slide="1">
+  <div class="owl">🦉</div>
+  <h1>HERMES AGENT</h1>
+  <h2>Tutorial Install di Termux + OpenRouter API</h2>
+  <div style="width:120px;height:4px;background:#e94560;margin:20px auto;border-radius:2px;"></div>
+  <p style="color:#666;">Dari nol sampai bisa — step by step</p>
+  <div class="tags">
+    <span class="tag">📱 Android / Termux</span>
+    <span class="tag">🤖 AI Agent</span>
+    <span class="tag">🆓 Free API</span>
+    <span class="tag">🇮🇩 Bahasa Indonesia</span>
+  </div>
+  <p style="margin-top:30px;color:#444;font-size:14px;">13 Halaman • 24 Mei 2026 • OWL</p>
+</div>
+
+<!-- ===== SLIDE 2: APA ITU HERMES ===== -->
+<div class="slide" data-slide="2">
+  <h2 class="section">🤔 APA ITU HERMES AGENT?</h2>
+  <p>Bayangkan punya <strong style="color:#fff">asisten pribadi</strong> yang bisa jalan di HP Android.</p>
+  <p>Asisten ini bisa:</p>
+  <ul>
+    <li>📁 Baca & tulis file</li>
+    <li>🌐 Cari info di internet</li>
+    <li>💬 Kirim notifikasi ke Telegram</li>
+    <li>⏰ Ngerjain tugas otomatis (jadwal, monitor)</li>
+    <li>💡 Ngobrol kayak ChatGPT, tapi punya AKSES ke HP kamu</li>
+  </ul>
+  <div class="tip" style="margin-top:20px;">💡 Hermes Agent BUKAN aplikasi. Dia jalan di terminal (layar hitang). Tapi jangan takut — tinggal copy-paste!</div>
+  <p style="margin-top:16px;color:#e94560;font-weight:700;font-size:20px;">Cara Kerja: HP Android → Termux → Hermes → OpenRouter → AI Model 🚀</p>
+</div>
+
+<!-- ===== SLIDE 3: APA ITU TERMUX ===== -->
+<div class="slide" data-slide="3">
+  <h2 class="section">📱 TERMUX ITU APA?</h2>
+  <p>Termux = <strong style="color:#fff">"Windows/Linux mini"</strong> di HP Android. Di sinilah Hermes Agent tinggal.</p>
+  <h3 style="margin-top:24px;">Analogi Sederhana:</h3>
+  <div class="model-grid">
+    <div class="model-card">
+      <div class="name">🏠 HP Android</div>
+      <div class="desc">Rumah tempat semua tinggal</div>
+    </div>
+    <div class="model-card">
+      <div class="name">🚪 Termux</div>
+      <div class="desc">Kamar kerja di dalam rumah</div>
+    </div>
+    <div class="model-card">
+      <div class="name">🤖 Hermes</div>
+      <div class="desc">Asisten yang ada di kamar kerja</div>
+    </div>
+    <div class="model-card">
+      <div class="name">🧠 OpenRouter</div>
+      <div class="desc">Otak AI yang diakses lewat internet</div>
+    </div>
+  </div>
+  <div class="warn-box" style="margin-top:16px;">⚠️ JANGAN install Termux dari Play Store! Pakai F-Droid: f-droid.org/packages/com.termux</div>
+</div>
+
+<!-- ===== SLIDE 4: INSTALL TERMUX ===== -->
+<div class="slide" data-slide="4">
+  <h2 class="section">📥 INSTALL TERMUX</h2>
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <h4>Download Termux dari F-Droid</h4>
+      <p>Buka browser HP, ketik alamat ini:</p>
+      <code>f-droid.org/packages/com.termux</code>
+      <div class="warn">⚠️ Gratis, aman, no iklan. Jangan dari Play Store!</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <h4>Install Termux</h4>
+      <p>Klik Download → Buka file .apk → Klik Install</p>
+      <div class="warn">⚠️ Izinkan "Install from unknown sources" kalau diminta</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <h4>Buka Termux</h4>
+      <p>Buka aplikasinya. Tunggu sampai muncul tanda <code style="background:#0f3460;padding:2px 8px;border-radius:4px;color:#00ff88">$</code></p>
+      <div class="warn">✅ Tanda "$" = Termux siap menerima perintah!</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 5: PERSIAPAN ===== -->
+<div class="slide" data-slide="5">
+  <h2 class="section">⚙️ PERSIAPAN: UPDATE & INSTALL</h2>
+  <p>Sebelum install Hermes, "beresin kamar kerja" dulu:</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <h4>Update Termux</h4>
+      <code>pkg update && pkg upgrade -y</code>
+      <div class="warn">Tunggu sampai selesai. Kalau ada prompt, ketik "Y" lalu Enter</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <h4>Install Packages Wajib</h4>
+      <code>pkg install -y nodejs python git curl wget nano openssl-tool</code>
+      <div class="warn">Node.js untuk Hermes. Python untuk tools tambahan. Tunggu 1-2 menit</div>
+    </div>
+  </div>
+  <div class="tip">💡 Semua perintah tinggal COPY-PASTE ke Termux. Jangan ketik manual!</div>
+</div>
+
+<!-- ===== SLIDE 6: INSTALL HERMES ===== -->
+<div class="slide" data-slide="6">
+  <h2 class="section">🔧 INSTALL HERMES AGENT</h2>
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <h4>Install via npm</h4>
+      <code>npm install -g @nousresearch/hermes-agent</code>
+      <div class="warn">⏱️ Tunggu 2-5 menit — JANGAN ditutup!</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <h4>Cek Version</h4>
+      <code>hermes --version</code>
+      <div class="warn">✅ Harus muncul: hermes v0.x.x atau serupa</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <h4>Inisialisasi</h4>
+      <code>hermes init</code>
+      <div class="warn">Folder ~/.hermes/ akan terbuat otomatis</div>
+    </div>
+  </div>
+  <div class="tip">💡 Kalau npm error: npm install -g npm (update dulu), lalu ulangi</div>
+</div>
+
+<!-- ===== SLIDE 7: OPENROUTER ===== -->
+<div class="slide" data-slide="7">
+  <h2 class="section">🔑 DAPATIN API KEY OPENROUTER</h2>
+  <p>Hermes butuh "kunci" untuk terhubung ke AI. Kunci ini = <strong style="color:#fff">API Key</strong>.</p>
+  <p style="margin:10px 0;color:#888;">Analogi: API Key itu seperti nomor HP — untuk terhubung ke server AI.</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <h4>Daftar di OpenRouter</h4>
+      <code>Tekan: https://openrouter.ai</code>
+      <div class="warn">Login pakai Google atau GitHub. Gratis, no credit card!</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <h4>Buat API Key</h4>
+      <p>Klik foto profil → "Keys" → "Create Key" → Beri nama: <code style="background:#0f3460;padding:2px 8px;border-radius:4px;color:#00ff88">"termux-hermes"</code></p>
+      <div class="warn">⚠️ COPY key-nya — format: sk-or-v1-xxxxx...</div>
+    </div>
+  </div>
+  <div class="tip">🆓 OpenRouter kasih FREE credits pas daftar! Tanpa kartu kredit!</div>
+</div>
+
+<!-- ===== SLIDE 8: FREE MODELS ===== -->
+<div class="slide" data-slide="8">
+  <h2 class="section">🆓 FREE MODELS — TANPA BAYAR!</h2>
+  <div class="model-grid">
+    <div class="model-card">
+      <div class="name">openrouter/auto</div>
+      <div class="desc">Otomatis pilih model gratis terbaik</div>
+      <span class="badge badge-rec">⭐ RECOMMENDED</span>
+    </div>
+    <div class="model-card">
+      <div class="name">gemini-2.0-flash-free</div>
+      <div class="desc">By Google. Cepat & responsif</div>
+      <span class="badge badge-fast">⚡ CEPAT</span>
+    </div>
+    <div class="model-card">
+      <div class="name">deepseek-chat:free</div>
+      <div class="desc">By DeepSeek. Paling jago di tier free</div>
+      <span class="badge badge-best">🏆 PALING JAGO</span>
+    </div>
+    <div class="model-card">
+      <div class="name">llama-3.3-70b:free</div>
+      <div class="desc">By Meta. Model besar 70B parameter</div>
+      <span class="badge badge-big">💪 BESAR</span>
+    </div>
+  </div>
+  <div class="tip" style="margin-top:16px;">💡 Mulai dengan "openrouter/auto" — dia otomatis pilih yang gratis & bagus!</div>
+  <div class="warn-box">⚠️ Model gratis punya "rate limit" — kalau terlalu sering dipakai, delay beberapa detik. Itu normal.</div>
+</div>
+
+<!-- ===== SLIDE 9: KONFIGURASI ===== -->
+<div class="slide" data-slide="9">
+  <h2 class="section">⚙️ KONFIGURASI HERMES + OPENROUTER</h2>
+  <p>Sambungkan Hermes ke OpenRouter pakai API Key. Copy-paste perintah ini:</p>
+  <div class="code-block">
+    <code><span class="comment"># 1. Set provider</span>
+<span class="cmd">hermes config set model.provider openrouter</span>
+
+<span class="comment"># 2. Set URL API</span>
+<span class="cmd">hermes config set model.base_url https://openrouter.ai/api/v1</span>
+
+<span class="comment"># 3. Set API Key (GANTI key_kamu dengan key asli!)</span>
+<span class="cmd">hermes config set model.api_key sk-or-v1-key_kamu_di_sini</span>
+
+<span class="comment"># 4. Set model default</span>
+<span class="cmd">hermes config set model.default openrouter/auto</span>
+
+<span class="comment"># 5. Test jalan!</span>
+<span class="cmd">hermes chat</span></code>
+  </div>
+  <div class="warn-box">⚠️ Ganti "key_kamu_di_sini" dengan API Key yang asli dari openrouter.ai/keys!</div>
+</div>
+
+<!-- ===== SLIDE 10: TELEGRAM BOT ===== -->
+<div class="slide" data-slide="10">
+  <h2 class="section">💬 BONUS: BIKIN BOT TELEGRAM</h2>
+  <p>Mau akses Hermes dari Telegram? Bisa!</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <h4>Buat Bot via @BotFather</h4>
+      <code>Di Telegram, cari @BotFather → /newbot</code>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <h4>Beri Nama Bot</h4>
+      <p>Nama bebas (contoh: "Hermes Assistant"). Username harus unik & diakhiri "bot"</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <h4>Copy Token</h4>
+      <code>Format: 123456:ABC-DEFxxxxx</code>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <h4>Set di Hermes</h4>
+      <code>hermes config set telegram.token TOKEN_KAMU</code><br>
+      <code>hermes gateway start</code>
+    </div>
+  </div>
+  <div class="tip">💡 Gateway = "jembatan" antara Telegram & Hermes. Harus jalan terus!</div>
+</div>
+
+<!-- ===== SLIDE 11: TESTING ===== -->
+<div class="slide" data-slide="11">
+  <h2 class="section">🧪 TESTING: PASTIKAN JALAN!</h2>
+
+  <h3>Cek Config Benar:</h3>
+  <div class="code-block">
+    <code><span class="cmd">hermes --version</span>
+<span class="comment"># Harus muncul version number ✅</span>
+
+<span class="cmd">hermes gateway status</span>
+<span class="comment"># Harusnya "running" ✅</span></code>
+  </div>
+
+  <h3 style="margin-top:20px;">Test Chat:</h3>
+  <div class="code-block">
+    <code><span class="cmd">hermes chat</span>
+<span class="comment"># Ketik "Halo" → Enter → Hermes harus balas! ✅</span></code>
+  </div>
+
+  <h3 style="margin-top:20px;">Test Telegram:</h3>
+  <p>Buka Telegram → Cari bot → /start → Kirim pesan → Harus ada balasan! ✅</p>
+
+  <div class="tip" style="margin-top:20px;">💡 Kalau ada error, next slide = troubleshooting!</div>
+</div>
+
+<!-- ===== SLIDE 12: TROUBLESHOOTING ===== -->
+<div class="slide" data-slide="12">
+  <h2 class="section">🔧 TROUBLESHOOTING</h2>
+  <div class="error-row">
+    <div class="error-card">
+      <div class="err">"hermes: command not found"</div>
+      <div class="fix">npm install -g @nousresearch/hermes-agent</div>
+    </div>
+    <div class="error-card">
+      <div class="err">"API key invalid" / "401"</div>
+      <div class="fix">Regenerate key di openrouter.ai/keys</div>
+    </div>
+    <div class="error-card">
+      <div class="err">"Connection error"</div>
+      <div class="fix">Cek internet / coba lagi nanti</div>
+    </div>
+    <div class="error-card">
+      <div class="err">"429 Too Many Requests"</div>
+      <div class="fix">Rate limit → tunggu 1-2 menit</div>
+    </div>
+    <div class="error-card">
+      <div class="err">Bot Telegram nggak balas</div>
+      <div class="fix">hermes gateway start</div>
+    </div>
+    <div class="error-card">
+      <div class="err">Termux mendadak mati</div>
+      <div class="fix">Battery → Unrestricted</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 13: QUICK START ===== -->
+<div class="slide" data-slide="13">
+  <h2 class="section">⚡ QUICK START — COPY-PASTE SEMUA</h2>
+  <p>Salin semua perintah ini, paste ke Termux. Tunggu tiap perintah selesai.</p>
+  <div class="code-block" style="max-height:500px;overflow:auto;">
+    <code><span class="comment"># ========= HERMES AGENT QUICK START =========</span>
+
+<span class="comment"># 1. Setup Termux (2-3 menit)</span>
+<span class="cmd">pkg update && pkg upgrade -y</span>
+<span class="cmd">pkg install -y nodejs python git curl wget nano openssl-tool</span>
+
+<span class="comment"># 2. Install Hermes (2-5 menit)</span>
+<span class="cmd">npm install -g @nousresearch/hermes-agent</span>
+
+<span class="comment"># 3. Init</span>
+<span class="cmd">hermes init</span>
+
+<span class="comment"># 4. Setup OpenRouter (GANTI KEY_KAMU!)</span>
+<span class="cmd">hermes config set model.provider openrouter</span>
+<span class="cmd">hermes config set model.base_url https://openrouter.ai/api/v1</span>
+<span class="cmd">hermes config set model.api_key sk-or-v1-KEY_KAMU</span>
+<span class="cmd">hermes config set model.default openrouter/auto</span>
+
+<span class="comment"># 5. Test</span>
+<span class="cmd">hermes chat</span>
+
+<span class="comment"># ========= SELESAI! =========</span></code>
+  </div>
+  <div class="tip" style="margin-top:12px;">💡KEY_KAMU = API Key dari https://openrouter.ai/keys</div>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+let current = 0;
+let autoTimer = null;
+
+function showSlide(n) {
+  slides.forEach(s => s.classList.remove('active'));
+  slides[n].classList.add('active');
+  current = n;
+  document.getElementById('progress').style.width = ((n+1)/slides.length*100) + '%';
+  document.getElementById('slideNum').textContent = (n+1) + ' / ' + slides.length;
+}
+
+function next() { if(current < slides.length-1) showSlide(current+1); }
+function prev() { if(current > 0) showSlide(current-1); }
+function toggleAuto() {
+  if(autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+  else { autoTimer = setInterval(next, 5000); }
+}
+
+document.addEventListener('keydown', e => {
+  if(e.key === 'ArrowRight' || e.key === ' ') next();
+  if(e.key === 'ArrowLeft') prev();
+});
+
+showSlide(0);
+</script>
+
+</body>
+</html>
