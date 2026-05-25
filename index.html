@@ -163,7 +163,7 @@
     <div class="step-content">
       <h4>Download Termux dari F-Droid</h4>
       <p>Buka browser HP, ketik alamat ini:</p>
-      <code>f-droid.org/packages/com.termux</code>
+      <code>https://f-droid.org/repo/com.termux_1002.apk</code>
       <div class="warn">⚠️ Gratis, aman, no iklan. Jangan dari Play Store!</div>
     </div>
   </div>
@@ -215,8 +215,8 @@
   <div class="step">
     <div class="step-num">1</div>
     <div class="step-content">
-      <h4>Install via npm</h4>
-      <code>npm install -g @nousresearch/hermes-agent</code>
+      <h4>Quick Install </h4>
+      <code>curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash</code>
       <div class="warn">⏱️ Tunggu 2-5 menit — JANGAN ditutup!</div>
     </div>
   </div>
@@ -236,7 +236,7 @@
       <div class="warn">Folder ~/.hermes/ akan terbuat otomatis</div>
     </div>
   </div>
-  <div class="tip">💡 Kalau npm error: npm install -g npm (update dulu), lalu ulangi</div>
+  <!-- <div class="tip">💡 Kalau npm error: npm install -g npm (update dulu), lalu ulangi</div> -->
 </div>
 
 <!-- ===== SLIDE 7: OPENROUTER ===== -->
@@ -298,22 +298,26 @@
   <h2 class="section">⚙️ KONFIGURASI HERMES + OPENROUTER</h2>
   <p>Sambungkan Hermes ke OpenRouter pakai API Key. Copy-paste perintah ini:</p>
   <div class="code-block">
-    <code><span class="comment"># 1. Set provider</span>
-<span class="cmd">hermes config set model.provider openrouter</span>
+    <code><span class="comment"># 1. Setup</span>
+<span class="cmd">hermes setup</span>
 
-<span class="comment"># 2. Set URL API</span>
-<span class="cmd">hermes config set model.base_url https://openrouter.ai/api/v1</span>
+<span class="comment"># 2. Select Provider</span>
+<span class="cmd">Pilih OpenRouter</span>
 
 <span class="comment"># 3. Set API Key (GANTI key_kamu dengan key asli!)</span>
-<span class="cmd">hermes config set model.api_key sk-or-v1-key_kamu_di_sini</span>
+<span class="cmd">Paste/Masukan API key OpenRouter</span>
 
-<span class="comment"># 4. Set model default</span>
-<span class="cmd">hermes config set model.default openrouter/auto</span>
+<span class="comment"># 4. Select default model</span>
+<span class="cmd">Cari yang free(openrouter/owl-alpha)</span>
 
-<span class="comment"># 5. Test jalan!</span>
-<span class="cmd">hermes chat</span></code>
+<span class="comment"># 5. Add anoter credential</span>
+<span class="cmd">jika punya lebih dari 1 API key OpenRouter,jika tidak enter saja</span></code>
+
+<span class="comment"># 6. Config lanjutan</span>
+<span class="cmd">jika tidak mengerti enter-enter saja sampai ke select platform</span></code>
+   
   </div>
-  <div class="warn-box">⚠️ Ganti "key_kamu_di_sini" dengan API Key yang asli dari openrouter.ai/keys!</div>
+  <!-- <div class="warn-box">⚠️ Ganti "key_kamu_di_sini" dengan API Key yang asli dari openrouter.ai/keys!</div> -->
 </div>
 
 <!-- ===== SLIDE 10: TELEGRAM BOT ===== -->
@@ -382,10 +386,10 @@
 <div class="slide" data-slide="12">
   <h2 class="section">🔧 TROUBLESHOOTING</h2>
   <div class="error-row">
-    <div class="error-card">
+    <!-- <div class="error-card">
       <div class="err">"hermes: command not found"</div>
       <div class="fix">npm install -g @nousresearch/hermes-agent</div>
-    </div>
+    </div> -->
     <div class="error-card">
       <div class="err">"API key invalid" / "401"</div>
       <div class="fix">Regenerate key di openrouter.ai/keys</div>
